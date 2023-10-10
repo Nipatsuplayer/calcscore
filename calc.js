@@ -4,9 +4,8 @@ function calculateScores() {
     const opponentPositions = getMissingNumbers(ourPositions);
     const ourScore = calculateTeamScore(ourPositions);
     const opponentScore = calculateTeamScore(opponentPositions);
-
-    // Check if the total score is 4364
     const totalScore = ourScore + opponentScore;
+
     let resultElement = document.getElementById("result");
     let ourScoreElement = document.getElementById("ourScore");
     let opponentScoreElement = document.getElementById("opponentScore");
@@ -14,17 +13,13 @@ function calculateScores() {
     ourScoreElement.textContent = ourScore;
     opponentScoreElement.textContent = opponentScore;
 
+    // Only show results if the sum is correct
     if (totalScore == 4364) {
         resultElement.classList.remove("d-none");
     }
 }
 
 function getPositions(input) {
-    // JavaScript implementation of your GetPositions function
-    // Parse the input string and return an array of positions
-    // ...
-
-    // Example implementation (you may need to adapt it):
     const parts = input.split(',');
     const positions = [];
     for (const part of parts) {
@@ -41,11 +36,6 @@ function getPositions(input) {
 }
 
 function calculateTeamScore(positions) {
-    // JavaScript implementation of your CalculateTeamScore function
-    // Calculate the team score based on positions and predefined scores
-    // ...
-
-    // Example implementation (you may need to adapt it):
     const scoresList = [
         300, 280, 262, 244, 228, 213, 198, 185, 173, 161, 
         150, 140, 131, 122, 114, 107, 99, 93, 87, 81, 
@@ -62,11 +52,6 @@ function calculateTeamScore(positions) {
 }
 
 function getMissingNumbers(positions) {
-    // JavaScript implementation of your GetMissingNumbers function
-    // Calculate missing positions
-    // ...
-
-    // Example implementation (you may need to adapt it):
     const allPositions = Array.from({ length: 50 }, (_, i) => i + 1);
     const missingNumbers = allPositions.filter((pos) => !positions.includes(pos));
     return missingNumbers;

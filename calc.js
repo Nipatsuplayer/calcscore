@@ -10,12 +10,22 @@ function calculateScores() {
     let ourScoreElement = document.getElementById("ourScore");
     let opponentScoreElement = document.getElementById("opponentScore");
 
-    ourScoreElement.textContent = ourScore;
-    opponentScoreElement.textContent = opponentScore;
+    ourScoreElement.textContent = ourScore + ' (players: ' + ourPositions.length + ')';
+    opponentScoreElement.textContent = opponentScore  + ' (players: ' + opponentPositions.length + ')';
 
     // Only show results if the sum is correct
     if (totalScore == 4364) {
         resultElement.classList.remove("d-none");
+    }
+    else if (!resultElement.classList.contains('d-none')) {
+        resultElement.classList.add('d-none');
+    }
+}
+
+function handleKeyPress(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        calculateScores(); 
     }
 }
 

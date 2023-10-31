@@ -1,5 +1,7 @@
-# calcscore
+# Calcscore
 
-## TODO
+Simple application to calculate standings in ICC matches in HCR2.
 
-** Lägg till möjlighet för lagnamn
+### TODO
+
+* Add possibility to use team names, and maybe save them between sessions

@@ -1,10 +1,6 @@
-function calculateScores(totalPlayerCount) {
+function calculateScores() {
     const input = document.getElementById("positionsInput").value;
-    
-    if(isNaN(totalPlayerCount))
-    {
-        totalPlayerCount = document.getElementById("totalInput").value;
-    }
+    const totalPlayerCount = document.getElementById("totalInput").value;
     
     const ourPositions = getPositions(input);
     const opponentPositions = getMissingNumbers(ourPositions, checkAndSetBoundaries(totalPlayerCount, 1, 100));

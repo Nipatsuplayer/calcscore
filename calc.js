@@ -35,9 +35,8 @@ function calculateScores() {
         teamScores.sort((a, b) => b.score - a.score);
     }
 
-    // Display scores for each team
     let resultElement = document.getElementById("result");
-    resultElement.innerHTML = ""; // Clear previous results
+    resultElement.innerHTML = "<h3>Results</h3>";
 
     for (let i = 0; i < teamScores.length; i++) {
         const team = teamScores[i];
@@ -45,11 +44,10 @@ function calculateScores() {
 
         let teamResult = document.createElement("p");
         teamResult.classList.add("mb-0");
-        teamResult.innerHTML += team.teamName + " score: <span>" + team.score + "</span> (players: " + team.totalPlayers + ")</p>";
+        teamResult.innerHTML += team.teamName + " score: <span>" + team.score + "</span> (players: " + team.totalPlayers + ")";
         resultElement.appendChild(teamResult);
     }
 
-    // Show results
     resultElement.classList.remove("d-none");
 }
 

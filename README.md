@@ -1,7 +1,4 @@
 # Calcscore
 
 Simple application to calculate standings in ICC matches in HCR2.
-
-### TODO
-
-* Add possibility to use team names, and maybe save them between sessions
+Now support matches with up to four teams and saving settings

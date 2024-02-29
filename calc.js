@@ -1,29 +1,82 @@
 function calculateScores() {
-    const input = document.getElementById("positionsInput").value;
-    const totalPlayerCount = document.getElementById("totalInput").value;
-    
-    const ourPositions = getPositions(input);
-    const opponentPositions = getMissingNumbers(ourPositions, checkAndSetBoundaries(totalPlayerCount, 1, 100));
-    const ourScore = calculateTeamScore(ourPositions);
-    const opponentScore = calculateTeamScore(opponentPositions);
-    const totalScore = ourScore + opponentScore;
+    const teamScores = []; 
+    const positionsTaken = [];
+    const totalPlayerCount = parseInt(document.getElementById("totalPlayerCountInput").value);
+    const numberOfTeams = parseInt(document.getElementById("teamCountSelect").value);
+    const teamNames = GetTeamNames();
+    const settings = GetSettings();
 
-    let resultElement = document.getElementById("result");
-    let ourScoreElement = document.getElementById("ourScore");
-    let opponentScoreElement = document.getElementById("opponentScore");
+    // Iterate over each team
+    for (let i = 1; i <= numberOfTeams; i++) {
+        var positionsInput, positions, teamScore;
 
-    ourScoreElement.textContent = ourScore + ' (players: ' + ourPositions.length + ')';
-    opponentScoreElement.textContent = opponentScore  + ' (players: ' + opponentPositions.length + ')';
-
-    // Only show results if the sum is correct
-    if (totalScore == getExpectedTotalScore(totalPlayerCount)) {
-         resultElement.classList.remove("d-none");
+        if(i < numberOfTeams)
+        {
+            positionsInput = document.getElementById("team" + i + "PositionsInput").value;
+            positions = getPositions(positionsInput);
+            teamScore = calculateTeamScore(positions, settings.iccMode);
+            positionsTaken.push(...positions);
+        }    
+        else {
+            positions = getMissingNumbers(positionsTaken,totalPlayerCount);
+            teamScore = calculateTeamScore(positions, settings.iccMode);
+        }
+        // Store team score in the array
+        teamScores.push({
+            positions: positions,
+            score: teamScore,
+            totalPlayers: positions.length,
+            teamName: teamNames[i-1]
+        });
     }
-    else if (!resultElement.classList.contains('d-none')) 
+    
+    if(settings.sortScores)
     {
-        resultElement.classList.add('d-none');
+        teamScores.sort((a, b) => b.score - a.score);
+    }
+
+    // Display scores for each team
+    let resultElement = document.getElementById("result");
+    resultElement.innerHTML = ""; // Clear previous results
+
+    for (let i = 0; i < teamScores.length; i++) {
+        const team = teamScores[i];
+        const teamNumber = i + 1;
+
+        let teamResult = document.createElement("p");
+        teamResult.classList.add("mb-0");
+        teamResult.innerHTML += team.teamName + " score: <span>" + team.score + "</span> (players: " + team.totalPlayers + ")</p>";
+        resultElement.appendChild(teamResult);
+    }
+
+    // Show results
+    resultElement.classList.remove("d-none");
+}
+
+function updateTeamInputs() {
+    const selectedTeamCount = parseInt(document.getElementById("teamCountSelect").value);
+
+    // Hide all team inputs
+    for (let i = 1; i <= 3; i++) {
+        document.getElementById("team" + i + "Inputs").style.display = "none";
+    }
+
+    // Show inputs for selected number of teams
+    for (let i = 1; i < selectedTeamCount; i++) {
+        document.getElementById("team" + i + "Inputs").style.display = "block";
+    }
+
+    // Update total player count based on selected team count
+    let totalPlayerCountInput = document.getElementById("totalPlayerCountInput");
+    if (selectedTeamCount === 2) {
+        totalPlayerCountInput.value = "50";
+    } else if (selectedTeamCount === 3) {
+        totalPlayerCountInput.value = "75";
+    } else if (selectedTeamCount === 4) {
+        totalPlayerCountInput.value = "100";
     }
 }
+
 
 function handleKeyPress(event) {
     if (event.key === "Enter") {
@@ -81,16 +134,84 @@ function getExpectedTotalScore(playerCount)
     return totalScore;
 }
 
-function calculateTeamScore(positions) {
+
+function calculateTeamScore(positions, iccMode) {
     let totalScore = 0;
     for (const position of positions) {
         totalScore += scoresList[position - 1];
     }
+    
+    if (iccMode && positions.includes(1)) {
+        totalScore += 1;
+    }
+
     return totalScore;
 }
+
 
 function getMissingNumbers(positions, totalPlayerCount) {
     const allPositions = Array.from({ length: totalPlayerCount }, (_, i) => i + 1);
     const missingNumbers = allPositions.filter((pos) => !positions.includes(pos));
     return missingNumbers;
+}
+
+
+function saveSettings() {
+    const iccMode = document.getElementById('iccModeCheckbox').checked;
+    const sortScores = document.getElementById('sortScoresCheckbox').checked;
+    const team1Name = document.getElementById('team1NameInput').value;
+    const team2Name = document.getElementById('team2NameInput').value;
+    const team3Name = document.getElementById('team3NameInput').value;
+    const team4Name = document.getElementById('team4NameInput').value;
+  
+    const settings = {
+      iccMode,
+      sortScores,
+      teamNames: [team1Name, team2Name, team3Name, team4Name]
+    };
+    localStorage.setItem('hcr2Settings', JSON.stringify(settings));
+    SetTeamNames();
+  }
+
+  document.addEventListener('DOMContentLoaded', (event) => {
+    const savedSettings = localStorage.getItem('hcr2Settings');
+    if (savedSettings) {
+      const settings = JSON.parse(savedSettings);
+      document.getElementById('iccModeCheckbox').checked = settings.iccMode;
+      document.getElementById('sortScoresCheckbox').checked = settings.sortScores;
+      settings.teamNames.forEach((teamName, index) => {
+         document.getElementById(`team${index + 1}NameInput`).value = teamName || '';
+      });
+      SetTeamNames();
+    }
+  });
+
+function GetSettings()
+{
+    const savedSettings = localStorage.getItem('hcr2Settings');
+    if (savedSettings) {
+        return JSON.parse(savedSettings);
+    }
+}
+
+function GetTeamNames()
+{
+    const settings = GetSettings();
+    const teamNames = settings.teamNames.map((name, index) => {
+    if (!name) { 
+        return `Team ${index + 1}`; 
+    }
+    return name;
+    });
+    return teamNames;
+}
+
+function SetTeamNames(skipLast = true) {
+    GetTeamNames().forEach((teamName, index, array) => {
+    if (skipLast && index === array.length - 1) {
+        return;
+    }
+    const label = teamName ? `${teamName} positions:` : `Team ${index + 1} positions:`;
+    document.getElementById(`team${index + 1}PositionsLabel`).innerText = label;
+});
 }

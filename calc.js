@@ -171,6 +171,18 @@ function saveSettings() {
     SetTeamNames();
   }
 
+  function getDefaultSettings() {
+    const iccMode = true;
+    const sortScores = false;
+  
+    const settings = {
+      iccMode,
+      sortScores,
+      teamNames: ['Team 1', 'Team 2','Team 3','Team 4']
+    };
+    return settings;
+  }
+
   document.addEventListener('DOMContentLoaded', (event) => {
     const savedSettings = localStorage.getItem('hcr2Settings');
     if (savedSettings) {
@@ -190,11 +202,13 @@ function GetSettings()
     if (savedSettings) {
         return JSON.parse(savedSettings);
     }
+    return getDefaultSettings();
 }
 
 function GetTeamNames()
 {
     const settings = GetSettings();
+
     const teamNames = settings.teamNames.map((name, index) => {
     if (!name) { 
         return `Team ${index + 1}`; 

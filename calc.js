@@ -184,16 +184,13 @@ function saveSettings() {
   }
 
   document.addEventListener('DOMContentLoaded', (event) => {
-    const savedSettings = localStorage.getItem('hcr2Settings');
-    if (savedSettings) {
-      const settings = JSON.parse(savedSettings);
+    const settings = GetSettings();
       document.getElementById('iccModeCheckbox').checked = settings.iccMode;
       document.getElementById('sortScoresCheckbox').checked = settings.sortScores;
       settings.teamNames.forEach((teamName, index) => {
          document.getElementById(`team${index + 1}NameInput`).value = teamName || '';
       });
       SetTeamNames();
-    }
   });
 
 function GetSettings()

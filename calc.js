@@ -184,14 +184,18 @@ function saveSettings() {
   }
 
   document.addEventListener('DOMContentLoaded', (event) => {
-    const settings = GetSettings();
-      document.getElementById('iccModeCheckbox').checked = settings.iccMode;
-      document.getElementById('sortScoresCheckbox').checked = settings.sortScores;
-      settings.teamNames.forEach((teamName, index) => {
-         document.getElementById(`team${index + 1}NameInput`).value = teamName || '';
-      });
-      SetTeamNames();
+   InitSettings();
   });
+
+function InitSettings() {
+    const settings = GetSettings();
+    document.getElementById('iccModeCheckbox').checked = settings.iccMode;
+    document.getElementById('sortScoresCheckbox').checked = settings.sortScores;
+    settings.teamNames.forEach((teamName, index) => {
+       document.getElementById(`team${index + 1}NameInput`).value = teamName || '';
+    });
+    SetTeamNames();
+}
 
 function GetSettings()
 {

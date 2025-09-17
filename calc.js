@@ -94,18 +94,46 @@ function checkAndSetBoundaries(number, lowerBound, upperBound) {
 }
 
 function getPositions(input) {
+    if (!input) {
+        return [];
+    }
+
     const parts = input.split(',');
     const positions = [];
-    for (const part of parts) {
+
+    for (const rawPart of parts) {
+        const part = rawPart.trim();
+
+        if (!part) {
+            continue;
+        }
+
         if (part.includes('-')) {
-            const [start, end] = part.split('-').map(Number);
-            for (let i = start; i <= end; i++) {
+            const [startRaw, endRaw] = part.split('-');
+            const start = Number(startRaw.trim());
+            const end = Number(endRaw.trim());
+
+            if (Number.isNaN(start) || Number.isNaN(end)) {
+                continue;
+            }
+
+            const rangeStart = Math.min(start, end);
+            const rangeEnd = Math.max(start, end);
+
+            for (let i = rangeStart; i <= rangeEnd; i++) {
                 positions.push(i);
             }
         } else {
-            positions.push(Number(part));
+            const position = Number(part);
+
+            if (Number.isNaN(position)) {
+                continue;
+            }
+
+            positions.push(position);
         }
     }
+
     return positions;
 }
 

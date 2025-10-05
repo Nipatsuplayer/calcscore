@@ -2,7 +2,6 @@ function showMessage(message, type = "danger") {
     const alertBox = document.getElementById("errorAlert");
     alertBox.textContent = message;
 
-    // Reset classes
     alertBox.className = `alert alert-${type} text-center position-fixed top-0 start-50 translate-middle-x w-75 shadow`;
     alertBox.classList.add("show");
 
@@ -52,7 +51,6 @@ function calculateScores() {
 
             positionsTaken.push(...positions);
         } else {
-            // Calculate positions for the last team
             positions = getMissingNumbers(positionsTaken, totalPlayerCount);
         }
 
@@ -70,7 +68,6 @@ function calculateScores() {
     if (settings.sortScores) teamScores.sort((a, b) => b.score - a.score);
 
     const resultElement = document.getElementById("result");
-    // ensure header exists and target list container
     resultElement.innerHTML = "<h3>Results</h3>";
     let resultList = document.getElementById("resultList");
     if (!resultList) {
@@ -87,7 +84,6 @@ function calculateScores() {
         const item = document.createElement("div");
         item.className = "list-group-item d-flex justify-content-between align-items-center";
 
-        // highlight leader
         if (team.score === maxScore) {
             item.classList.add("border", "border-warning", "bg-dark", "text-white");
             item.innerHTML = `<div><span class="me-2">🏆</span><strong>${team.teamName}</strong> — ${team.score} points</div><small class="text-muted">players: ${team.totalPlayers}</small>`;
@@ -98,7 +94,6 @@ function calculateScores() {
         resultList.appendChild(item);
     }
  
-    // Add single summary row after both team blocks when there are exactly two teams
     if (teamScores.length === 2) {
         const a = teamScores[0];
         const b = teamScores[1];
@@ -191,7 +186,6 @@ function updateTeamInputs() {
     const teamCountSelect = document.getElementById("teamCountSelect");
     const selectedTeamCount = parseInt(teamCountSelect.value);
 
-    // Show inputs for teams 1..(N-1). The last team is auto-calculated.
     const editableCount = Math.max(1, selectedTeamCount - 1);
 
     for (let i = 1; i <= 4; i++) {
@@ -200,10 +194,8 @@ function updateTeamInputs() {
         teamInputs.style.display = (i <= editableCount) ? "" : "none";
     }
 
-    // Update labels to reflect team names, skipping the last (computed) team
     SetTeamNames(true);
 
-    // Update total player count based on selected team count presets
     const totalPlayerCountInput = document.getElementById("totalPlayerCountInput");
     if (totalPlayerCountInput) {
         if (selectedTeamCount === 2) totalPlayerCountInput.value = "50";
@@ -212,7 +204,6 @@ function updateTeamInputs() {
     }
 }
 
-// Ensure the function is called on page load to initialize the inputs
 document.addEventListener('DOMContentLoaded', () => {
     updateTeamInputs();
     document.getElementById('teamCountSelect').addEventListener('change', updateTeamInputs);
